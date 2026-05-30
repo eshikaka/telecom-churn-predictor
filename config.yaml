@@ -1,0 +1,579 @@
+# =============================================================================
+# Churn Prediction System — Master Configuration
+# =============================================================================
+# To adapt this system to any churn dataset:
+#   1. Update data.files with your file names
+#   2. Update schema keys (join_key, target.column, etc.)
+#   3. Update feature lists in training section
+#   4. Update dashboard.form_fields with your dataset's input fields
+#   5. Set feature_engineering derived features to enabled: false if
+#      the required source columns don't exist in your dataset
+#   No Python code changes required.
+# =============================================================================
+
+# ---------------------------------------------------------------------------
+# 1. DATA SOURCES & PATHS
+# ---------------------------------------------------------------------------
+data:
+  source_directory: "Data/"
+  file_extension: ".xlsx"              # ".xlsx" or ".csv"
+  output_directory: "Data/processed/"
+  artifacts_directory: "artifacts/"
+
+  # Files to load and join (order matters for join sequence)
+  files:
+    demographics: "Telco_customer_churn_demographics.xlsx"
+    location: "Telco_customer_churn_location.xlsx"
+    population: "Telco_customer_churn_population.xlsx"
+    services: "Telco_customer_churn_services.xlsx"
+    status: "Telco_customer_churn_status.xlsx"
+    churn_extra: "CustomerChurn.xlsx"
+
+# ---------------------------------------------------------------------------
+# 2. COLUMN MAPPINGS & SCHEMA
+# ---------------------------------------------------------------------------
+schema:
+  join_key: "Customer ID"
+
+  secondary_joins:
+    population: "Zip Code"
+
+  target:
+    column: "Churn Value"
+    positive_label: 1
+    negative_label: 0
+
+  target_aliases:
+    - "Churn Label"
+    - "Churn"
+
+  admin_columns:
+    - "Count"
+    - "Quarter"
+    - "Location ID"
+    - "Service ID"
+    - "Status ID"
+
+  leakage_columns:
+    - "Churn Score"
+    - "CLTV"
+    - "Churn Category"
+    - "Churn Reason"
+    - "Customer Status"
+
+  id_columns:
+    - "Customer ID"
+    - "LoyaltyID"
+
+  geo_drop_columns:
+    - "Lat Long"
+    - "Latitude"
+    - "Longitude"
+    - "Country"
+    - "State"
+
+  churn_extra_keep:
+    - "Customer ID"
+    - "LoyaltyID"
+    - "Tenure"
+    - "Churn"
+    - "Partner"
+    - "Tech Support"
+    - "Device Protection"
+
+  redundant_checks:
+    - source: "Churn Label"
+      duplicate_of: "Churn"
+    - source: "Under 30"
+      derived_from: "Age"
+      condition: "< 30"
+    - source: "Senior Citizen"
+      derived_from: "Age"
+      condition: ">= 65"
+
+# ---------------------------------------------------------------------------
+# 3. PREPROCESSING PARAMETERS
+# ---------------------------------------------------------------------------
+preprocessing:
+  force_numeric_columns:
+    - "Total Charges"
+
+  boolean_map:
+    "Yes": 1
+    "No": 0
+    "True": 1
+    "False": 0
+
+  ordinal_maps:
+    "Tech Support":
+      "No internet service": 0
+      "No": 1
+      "Yes": 2
+    "Device Protection":
+      "No internet service": 0
+      "No": 1
+      "Yes": 2
+
+  gender_map:
+    "Male": 1
+    "Female": 0
+
+  conditional_imputation:
+    "Offer":
+      fill_value: "None"
+      reason: "Customer received no promotional offer"
+    "Internet Type":
+      fill_value: "No Internet"
+      reason: "Customer has no internet service"
+
+  knn_imputer:
+    n_neighbors: 5
+    weights: "distance"
+
+  inference_fallback: "median"
+
+# ---------------------------------------------------------------------------
+# 4. FEATURE ENGINEERING
+# ---------------------------------------------------------------------------
+# Each derived feature block has an `enabled` flag.
+# Set enabled: false for any feature whose source columns don't exist
+# in your dataset — it will be silently skipped without crashing.
+# ---------------------------------------------------------------------------
+feature_engineering:
+
+  # ── Derived Feature 1: Service Density ───────────────────────────────────
+  # Count of active services per customer.
+  # Set enabled: false for non-subscription datasets (e.g. e-commerce, banking).
+  service_density:
+    enabled: true
+    columns:
+      - "Phone Service"
+      - "Internet Service"
+      - "Online Security"
+      - "Online Backup"
+      - "Device Protection Plan"
+      - "Premium Tech Support"
+      - "Streaming TV"
+      - "Streaming Movies"
+      - "Streaming Music"
+      - "Unlimited Data"
+      - "Multiple Lines"
+
+  # ── Derived Feature 2: ARPU (Avg Revenue Per User) ───────────────────────
+  # numerator / denominator — update column names for your dataset.
+  # Set enabled: false if your dataset has no revenue or tenure columns.
+  arpu:
+    enabled: true
+    numerator: "Total Charges"
+    denominator: "Tenure in Months"
+    zero_tenure_default: 0.0        # Prevents ZeroDivisionError for new customers
+
+  # ── Derived Feature 3: Autopay Indicator ─────────────────────────────────
+  # Binary flag for automated vs. manual payment.
+  # Set enabled: false if your dataset has no payment method column.
+  autopay_indicator:
+    enabled: true
+    payment_method_column: "Payment Method"
+    keywords:
+      - "auto"
+      - "credit card"
+      - "bank transfer"
+
+  # ── Outlier Treatment ─────────────────────────────────────────────────────
+  outlier:
+    method: "winsorize"
+    lower_percentile: 0.01
+    upper_percentile: 0.99
+    continuous_columns:
+      - "Monthly Charge"
+      - "Total Charges"
+      - "Total Revenue"
+      - "Total Refunds"
+      - "Total Extra Data Charges"
+      - "Total Long Distance Charges"
+      - "Avg Monthly Long Distance Charges"
+
+  rare_label_threshold: 0.01
+
+  frequency_encode_columns:
+    - "City"
+    - "Zip Code"
+
+# ---------------------------------------------------------------------------
+# 5. TRAINING & MODEL CONFIGURATION
+# ---------------------------------------------------------------------------
+training:
+  test_size: 0.20
+  random_state: 42
+  cv_folds: 5
+
+  categorical_features:
+    - "Offer"
+    - "Internet Type"
+    - "Contract"
+    - "Payment Method"
+    - "Partner"
+
+  numeric_features:
+    - "Age"
+    - "Number of Dependents"
+    - "Number of Referrals"
+    - "Tenure in Months"
+    - "Monthly Charge"
+    - "Total Charges"
+    - "Total Refunds"
+    - "Total Extra Data Charges"
+    - "Total Long Distance Charges"
+    - "Avg Monthly Long Distance Charges"
+    - "Avg Monthly GB Download"
+    - "Population"
+    - "Satisfaction Score"
+    - "Service_Density"        # Silently ignored if service_density.enabled: false
+    - "ARPU"                   # Silently ignored if arpu.enabled: false
+    - "Autopay_Indicator"      # Silently ignored if autopay_indicator.enabled: false
+
+  passthrough_features:
+    - "Gender"
+    - "Married"
+    - "Dependents"
+    - "Phone Service"
+    - "Multiple Lines"
+    - "Internet Service"
+    - "Online Security"
+    - "Online Backup"
+    - "Device Protection Plan"
+    - "Premium Tech Support"
+    - "Streaming TV"
+    - "Streaming Movies"
+    - "Streaming Music"
+    - "Unlimited Data"
+    - "Paperless Billing"
+    - "Referred a Friend"
+
+  models:
+    logistic_regression:
+      enabled: true
+      param_grid:
+        C: [0.01, 0.1, 1, 10]
+        penalty: ["l2"]
+        solver: ["lbfgs"]
+        max_iter: [1000]
+
+    xgboost:
+      enabled: true
+      param_grid:
+        n_estimators: [100, 200, 300]
+        max_depth: [3, 5, 7]
+        learning_rate: [0.01, 0.05, 0.1]
+        subsample: [0.8, 1.0]
+        colsample_bytree: [0.8, 1.0]
+        scale_pos_weight: ["auto"]
+        eval_metric: ["logloss"]
+
+    random_forest:
+      enabled: true
+      param_grid:
+        n_estimators: [100, 200, 300]
+        max_depth: [5, 10, 15, null]
+        min_samples_split: [2, 5, 10]
+        min_samples_leaf: [1, 2, 4]
+        class_weight: ["balanced"]
+
+  scoring_metric: "roc_auc"
+
+# ---------------------------------------------------------------------------
+# 6. EXPLAINABILITY
+# ---------------------------------------------------------------------------
+explainability:
+  shap_background_samples: 100
+  shap_max_display: 15
+  save_global_shap: true
+
+# ---------------------------------------------------------------------------
+# 7. DASHBOARD (app.py)
+# ---------------------------------------------------------------------------
+dashboard:
+  title: "Customer Churn Analytics & Prediction"
+  page_icon: "📊"
+  layout: "wide"
+
+  # ── Retention Strategy Rules ──────────────────────────────────────────────
+  # Replace these with rules relevant to your industry.
+  # Each rule fires when churn_probability >= risk_threshold AND
+  # the customer's feature value matches the condition.
+  retention_strategies:
+    - condition:
+        feature: "Contract"
+        value: "month-to-month"          # lowercase — matched after text standardisation
+      risk_threshold: 0.6
+      recommendation: >
+        Flagged for High Risk: Recommend automated promotion targeting
+        a 12-month long-term contract upgrade with loyalty discounts.
+
+    - condition:
+        feature: "Tenure in Months"
+        value_lt: 6
+      risk_threshold: 0.5
+      recommendation: >
+        New Customer at Risk: Deploy early-engagement onboarding sequence
+        with dedicated account manager and first-quarter incentive bundle.
+
+    - condition:
+        feature: "Internet Type"
+        value: "fiber optic"
+      risk_threshold: 0.55
+      recommendation: >
+        Fiber Optic Flight Risk: Investigate service quality issues.
+        Offer speed-tier upgrade or temporary billing credit.
+
+    - condition:
+        feature: "Paperless Billing"
+        value: 1
+      risk_threshold: 0.5
+      recommendation: >
+        Digital-only customer disengaging: Trigger multi-channel
+        re-engagement (email + SMS + in-app notification) with
+        personalized usage summary and savings report.
+
+    - condition:
+        feature: "Payment Method"
+        value: "electronic check"
+      risk_threshold: 0.5
+      recommendation: >
+        Manual payment friction detected: Offer seamless migration
+        to auto-pay with a one-time billing credit incentive.
+
+  default_strategy: >
+    Standard Retention Protocol: Schedule proactive customer success
+    check-in and offer personalized loyalty reward based on usage pattern.
+
+  # ── Dynamic Predictor Form ────────────────────────────────────────────────
+  # Define every input field for the single-customer predictor here.
+  # The form is generated entirely from this config — no app.py changes needed
+  # when switching datasets.
+  #
+  # Field types:
+  #   select  — dropdown list  (options: list, default: one of the options)
+  #   binary  — Yes / No       (default: "Yes" or "No")
+  #   number  — numeric input  (min, max, step, default — all required)
+  #   slider  — integer slider (min, max, default)
+  #
+  # Optional `label` overrides the display name shown in the UI.
+  # If omitted, the field `name` is used as the label.
+  # ─────────────────────────────────────────────────────────────────────────
+  form_fields:
+    layout_columns: 3           # Number of side-by-side columns in the UI
+
+    sections:
+
+      - title: "Demographics"
+        fields:
+          - name: "Gender"
+            type: select
+            options: ["Male", "Female"]
+            default: "Male"
+
+          - name: "Age"
+            type: number
+            min: 18
+            max: 100
+            step: 1
+            default: 35
+
+          - name: "Married"
+            type: binary
+            default: "Yes"
+
+          - name: "Dependents"
+            type: binary
+            default: "No"
+
+          - name: "Number of Dependents"
+            type: number
+            min: 0
+            max: 10
+            step: 1
+            default: 0
+
+          - name: "Partner"
+            type: binary
+            default: "No"
+
+      - title: "Services"
+        fields:
+          - name: "Tenure in Months"
+            label: "Tenure (Months)"
+            type: number
+            min: 0
+            max: 120
+            step: 1
+            default: 12
+
+          - name: "Contract"
+            type: select
+            options: ["Month-to-month", "One year", "Two year"]
+            default: "Month-to-month"
+
+          - name: "Internet Type"
+            type: select
+            options: ["Fiber Optic", "DSL", "Cable", "No Internet"]
+            default: "Fiber Optic"
+
+          - name: "Offer"
+            type: select
+            options: ["None", "Offer A", "Offer B", "Offer C", "Offer D", "Offer E"]
+            default: "None"
+
+          - name: "Phone Service"
+            type: binary
+            default: "Yes"
+
+          - name: "Internet Service"
+            type: binary
+            default: "Yes"
+
+          - name: "Online Security"
+            type: binary
+            default: "No"
+
+          - name: "Online Backup"
+            type: binary
+            default: "No"
+
+          - name: "Streaming TV"
+            type: binary
+            default: "Yes"
+
+          - name: "Streaming Movies"
+            type: binary
+            default: "Yes"
+
+          - name: "Streaming Music"
+            type: binary
+            default: "No"
+
+          - name: "Premium Tech Support"
+            type: binary
+            default: "No"
+
+          - name: "Device Protection Plan"
+            type: binary
+            default: "No"
+
+          - name: "Unlimited Data"
+            type: binary
+            default: "Yes"
+
+          - name: "Multiple Lines"
+            type: binary
+            default: "No"
+
+          - name: "Referred a Friend"
+            type: binary
+            default: "No"
+
+          - name: "Number of Referrals"
+            type: number
+            min: 0
+            max: 20
+            step: 1
+            default: 0
+
+      - title: "Billing & Satisfaction"
+        fields:
+          - name: "Monthly Charge"
+            label: "Monthly Charge ($)"
+            type: number
+            min: 0.0
+            max: 500.0
+            step: 5.0
+            default: 70.0
+
+          - name: "Total Charges"
+            label: "Total Charges ($)"
+            type: number
+            min: 0.0
+            max: 10000.0
+            step: 50.0
+            default: 840.0
+
+          - name: "Payment Method"
+            type: select
+            options:
+              - "Electronic check"
+              - "Mailed check"
+              - "Bank transfer (automatic)"
+              - "Credit card (automatic)"
+            default: "Electronic check"
+
+          - name: "Paperless Billing"
+            type: binary
+            default: "Yes"
+
+          - name: "Satisfaction Score"
+            type: slider
+            min: 1
+            max: 5
+            default: 3
+
+          - name: "Avg Monthly Long Distance Charges"
+            label: "Avg Monthly Long Distance ($)"
+            type: number
+            min: 0.0
+            max: 100.0
+            step: 1.0
+            default: 10.0
+
+          - name: "Avg Monthly GB Download"
+            label: "Avg Monthly GB Download"
+            type: number
+            min: 0.0
+            max: 200.0
+            step: 1.0
+            default: 20.0
+
+          - name: "Total Refunds"
+            label: "Total Refunds ($)"
+            type: number
+            min: 0.0
+            max: 100.0
+            step: 1.0
+            default: 0.0
+
+          - name: "Total Extra Data Charges"
+            label: "Total Extra Data Charges ($)"
+            type: number
+            min: 0.0
+            max: 200.0
+            step: 1.0
+            default: 0.0
+
+          - name: "Total Long Distance Charges"
+            label: "Total Long Distance Charges ($)"
+            type: number
+            min: 0.0
+            max: 1000.0
+            step: 10.0
+            default: 120.0
+
+          - name: "Population"
+            label: "ZIP Code Population"
+            type: number
+            min: 0
+            max: 100000
+            step: 1000
+            default: 10000
+
+  # ── Computed Fields ───────────────────────────────────────────────────────
+  # Fields derived from form inputs after submission.
+  # These are added to the customer dict before prediction.
+  # Supported operations: "sum"
+  # Replace or remove for other datasets.
+  computed_fields:
+    - name: "Total Revenue"
+      operation: "sum"
+      sources:
+        - "Total Charges"
+        - "Total Refunds"
+        - "Total Extra Data Charges"
+        - "Total Long Distance Charges"
