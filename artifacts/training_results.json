@@ -1,0 +1,171 @@
+[
+  {
+    "model_name": "LogisticRegression",
+    "accuracy": 0.9638,
+    "precision": 0.9601,
+    "recall": 0.9011,
+    "f1_score": 0.9297,
+    "roc_auc": 0.9921,
+    "avg_precision": 0.9821,
+    "confusion_matrix": {
+      "TP": 337,
+      "FP": 14,
+      "TN": 1021,
+      "FN": 37
+    },
+    "classification_report": {
+      "0": {
+        "precision": 0.9650283553875236,
+        "recall": 0.9864734299516909,
+        "f1-score": 0.9756330625895844,
+        "support": 1035.0
+      },
+      "1": {
+        "precision": 0.9601139601139601,
+        "recall": 0.9010695187165776,
+        "f1-score": 0.9296551724137931,
+        "support": 374.0
+      },
+      "accuracy": 0.9638041163946061,
+      "macro avg": {
+        "precision": 0.9625711577507419,
+        "recall": 0.9437714743341342,
+        "f1-score": 0.9526441175016888,
+        "support": 1409.0
+      },
+      "weighted avg": {
+        "precision": 0.9637238956058964,
+        "recall": 0.9638041163946061,
+        "f1-score": 0.9634288532739378,
+        "support": 1409.0
+      }
+    },
+    "roc_curve_path": "artifacts/roc_curve_LogisticRegression.png",
+    "pr_curve_path": "artifacts/pr_curve_LogisticRegression.png",
+    "confusion_matrix_path": "artifacts/confusion_matrix_LogisticRegression.png",
+    "calibration_curve_path": "artifacts/calibration_curve_LogisticRegression.png",
+    "optimal_threshold": 0.4799999999999999,
+    "optimal_threshold_f1": 0.9304229195088677,
+    "best_cv_score": 0.9927,
+    "best_params": {
+      "C": 10,
+      "max_iter": 1000,
+      "penalty": "l2",
+      "solver": "lbfgs"
+    }
+  },
+  {
+    "model_name": "XGBClassifier",
+    "accuracy": 0.9603,
+    "precision": 0.9162,
+    "recall": 0.9358,
+    "f1_score": 0.9259,
+    "roc_auc": 0.9924,
+    "avg_precision": 0.983,
+    "confusion_matrix": {
+      "TP": 350,
+      "FP": 32,
+      "TN": 1003,
+      "FN": 24
+    },
+    "classification_report": {
+      "0": {
+        "precision": 0.9766309639727361,
+        "recall": 0.9690821256038648,
+        "f1-score": 0.9728419010669254,
+        "support": 1035.0
+      },
+      "1": {
+        "precision": 0.9162303664921466,
+        "recall": 0.9358288770053476,
+        "f1-score": 0.9259259259259259,
+        "support": 374.0
+      },
+      "accuracy": 0.9602555003548616,
+      "macro avg": {
+        "precision": 0.9464306652324413,
+        "recall": 0.9524555013046061,
+        "f1-score": 0.9493839134964257,
+        "support": 1409.0
+      },
+      "weighted avg": {
+        "precision": 0.9605984420013091,
+        "recall": 0.9602555003548616,
+        "f1-score": 0.9603886897803862,
+        "support": 1409.0
+      }
+    },
+    "roc_curve_path": "artifacts/roc_curve_XGBClassifier.png",
+    "pr_curve_path": "artifacts/pr_curve_XGBClassifier.png",
+    "confusion_matrix_path": "artifacts/confusion_matrix_XGBClassifier.png",
+    "calibration_curve_path": "artifacts/calibration_curve_XGBClassifier.png",
+    "optimal_threshold": 0.63,
+    "optimal_threshold_f1": 0.9320652173913043,
+    "best_cv_score": 0.9934,
+    "best_params": {
+      "colsample_bytree": 0.8,
+      "eval_metric": "logloss",
+      "learning_rate": 0.05,
+      "max_depth": 7,
+      "n_estimators": 100,
+      "scale_pos_weight": 2.77,
+      "subsample": 0.8
+    }
+  },
+  {
+    "model_name": "RandomForest",
+    "accuracy": 0.9581,
+    "precision": 0.9539,
+    "recall": 0.885,
+    "f1_score": 0.9182,
+    "roc_auc": 0.9874,
+    "avg_precision": 0.9759,
+    "confusion_matrix": {
+      "TP": 331,
+      "FP": 16,
+      "TN": 1019,
+      "FN": 43
+    },
+    "classification_report": {
+      "0": {
+        "precision": 0.9595103578154426,
+        "recall": 0.9845410628019323,
+        "f1-score": 0.971864568431092,
+        "support": 1035.0
+      },
+      "1": {
+        "precision": 0.9538904899135446,
+        "recall": 0.8850267379679144,
+        "f1-score": 0.9181692094313454,
+        "support": 374.0
+      },
+      "accuracy": 0.9581263307310149,
+      "macro avg": {
+        "precision": 0.9567004238644936,
+        "recall": 0.9347839003849234,
+        "f1-score": 0.9450168889312187,
+        "support": 1409.0
+      },
+      "weighted avg": {
+        "precision": 0.9580186398627741,
+        "recall": 0.9581263307310149,
+        "f1-score": 0.9576118613580578,
+        "support": 1409.0
+      }
+    },
+    "roc_curve_path": "artifacts/roc_curve_RandomForest.png",
+    "pr_curve_path": "artifacts/pr_curve_RandomForest.png",
+    "confusion_matrix_path": "artifacts/confusion_matrix_RandomForest.png",
+    "calibration_curve_path": "artifacts/calibration_curve_RandomForest.png",
+    "optimal_threshold": 0.42999999999999994,
+    "optimal_threshold_f1": 0.9234972677595629,
+    "best_cv_score": 0.9885,
+    "best_params": {
+      "class_weight": "balanced",
+      "max_depth": null,
+      "min_samples_leaf": 2,
+      "min_samples_split": 2,
+      "n_estimators": 200
+    }
+  }
+]
