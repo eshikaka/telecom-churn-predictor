@@ -515,6 +515,12 @@ def render_micro_view(cfg: Dict[str, Any]):
 
     # --- Build form entirely from config.yaml ---
     st.subheader("Customer Profile Input")
+
+    if st.button("Reset to Defaults"):
+        for key in st.session_state.keys():
+            del st.session_state[key]
+        st.rerun()
+
     customer_raw, submitted = render_dynamic_form(cfg)
 
     if submitted:
