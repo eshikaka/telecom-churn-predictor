@@ -517,8 +517,7 @@ def render_micro_view(cfg: Dict[str, Any]):
     st.subheader("Customer Profile Input")
 
     if st.button("Reset to Defaults"):
-        for key in st.session_state.keys():
-            del st.session_state[key]
+        st.session_state.clear()
         st.rerun()
 
     customer_raw, submitted = render_dynamic_form(cfg)
