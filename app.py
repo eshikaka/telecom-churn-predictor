@@ -72,7 +72,6 @@ def load_preprocessor(artifacts_dir: str):
     return joblib.load(os.path.join(artifacts_dir, "preprocessor.joblib"))
 
 
-@st.cache_data
 def load_training_results(artifacts_dir: str) -> List[Dict]:
     path = os.path.join(artifacts_dir, "training_results.json")
     if os.path.exists(path):
