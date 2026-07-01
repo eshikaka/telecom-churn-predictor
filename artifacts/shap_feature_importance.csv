@@ -1,0 +1,50 @@
+feature,mean_abs_shap
+num__Satisfaction Score,3.9670217973860313
+num__Number of Referrals,0.5172661163916455
+pass__Online Security,0.4742711341195521
+cat__Contract_month-to-month,0.3659879185999263
+cat__Contract_two year,0.162507698153305
+num__Total Long Distance Charges,0.13638226137589693
+pass__Dependents,0.135350968760026
+num__Tenure in Months,0.13348029823194865
+num__Monthly Charge,0.12044293823787923
+pass__Streaming Music,0.11865867681205629
+num__Number of Dependents,0.1070245124530852
+num__Total Charges,0.10258785150969253
+num__ARPU,0.09846144217023496
+num__Avg Monthly GB Download,0.09757713065533781
+pass__Premium Tech Support,0.09005462956602019
+num__Population,0.08687685303202508
+num__Age,0.08680688046460214
+pass__Referred a Friend,0.08557200607370646
+pass__Paperless Billing,0.08029096379550615
+pass__Online Backup,0.07520221396983849
+num__Avg Monthly Long Distance Charges,0.07457345800823674
+num__Autopay_Indicator,0.06985658868203803
+cat__Internet Type_fiber optic,0.05860479000291395
+num__Service_Density,0.05175295522819257
+pass__Multiple Lines,0.050467039293377806
+pass__Streaming TV,0.0447928776067628
+cat__Offer_None,0.04472399221446841
+cat__Payment Method_bank withdrawal,0.0430801563876909
+pass__Streaming Movies,0.03743692334512835
+pass__Gender,0.03657700298163936
+pass__Device Protection Plan,0.035149007891617394
+cat__Contract_one year,0.03102111812657421
+num__Total Extra Data Charges,0.03051882152523602
+cat__Partner_1,0.024891504983684483
+cat__Offer_offer b,0.023135787850140848
+cat__Offer_offer e,0.01636188550609049
+cat__Internet Type_dsl,0.016025677313881853
+cat__Offer_offer a,0.014330248512855708
+cat__Payment Method_credit card,0.010603261279848434
+pass__Unlimited Data,0.00981435744712044
+cat__Offer_offer d,0.009490984307376138
+num__Total Refunds,0.008680653031702706
+pass__Married,0.005990606450782304
+cat__Internet Type_cable,0.005495968841220762
+cat__Offer_offer c,0.005170659442039462
+cat__Payment Method_mailed check,0.004747646221671575
+pass__Phone Service,0.003299116767553568
+cat__Internet Type_No Internet,0.0015163727684714724
+pass__Internet Service,0.0
