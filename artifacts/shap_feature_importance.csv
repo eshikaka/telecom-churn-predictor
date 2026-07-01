@@ -1,50 +1,50 @@
 feature,mean_abs_shap
-num__Satisfaction Score,2.506534596093266
-num__Number of Referrals,0.37258484005635334
-pass__Online Security,0.3476404717588726
-cat__Contract_month-to-month,0.31050746721611483
-num__Number of Dependents,0.16446046906817527
-num__Monthly Charge,0.12017046623349978
-cat__Contract_two year,0.11581490779313398
-num__Total Long Distance Charges,0.0943072370693521
-num__Tenure in Months,0.08596405996038628
-num__ARPU,0.0702567506557578
-num__Autopay_Indicator,0.060368086418132974
-num__Population,0.05889143855916346
-num__Age,0.05429323028110475
-num__Total Charges,0.05086688949073595
-pass__Streaming Music,0.046945910555492215
-pass__Premium Tech Support,0.0434991121160202
-num__Avg Monthly Long Distance Charges,0.03957709092952744
-pass__Paperless Billing,0.03584283414081986
-num__Avg Monthly GB Download,0.03531553157055194
-pass__Dependents,0.021677074999842397
-cat__Partner_1,0.020426267911406632
-num__Service_Density,0.020004960542696508
-cat__Payment Method_bank withdrawal,0.017904714418561948
-cat__Internet Type_fiber optic,0.01775835119835261
-pass__Online Backup,0.01768808212271344
-pass__Streaming TV,0.017636463736093445
-cat__Offer_offer e,0.017458025170027643
-pass__Multiple Lines,0.017352655869641388
-cat__Contract_one year,0.015134189447587288
-num__Total Extra Data Charges,0.01351693667122059
-pass__Married,0.012219756352287515
-cat__Internet Type_dsl,0.008665401331545974
-pass__Streaming Movies,0.008211401826249905
-pass__Device Protection Plan,0.00735123304352132
-cat__Payment Method_credit card,0.007173375614208066
-cat__Offer_offer b,0.006163522308699112
-pass__Gender,0.005359715233965581
-cat__Internet Type_No Internet,0.005035903137220102
-num__Total Refunds,0.004820695403476234
-cat__Offer_offer a,0.0039626828788903645
-cat__Offer_None,0.0038822144304928676
-pass__Unlimited Data,0.0038538599746819283
-pass__Referred a Friend,0.003091637051402584
-cat__Offer_offer d,0.0025704055678831056
-cat__Internet Type_cable,0.001809822678803649
-cat__Payment Method_mailed check,0.0016328841390335675
-cat__Offer_offer c,0.0007559377205919737
-pass__Phone Service,0.00040150646036588136
+num__Satisfaction Score,3.9670217973860313
+num__Number of Referrals,0.5172661163916455
+pass__Online Security,0.4742711341195521
+cat__Contract_month-to-month,0.3659879185999263
+cat__Contract_two year,0.162507698153305
+num__Total Long Distance Charges,0.13638226137589693
+pass__Dependents,0.135350968760026
+num__Tenure in Months,0.13348029823194865
+num__Monthly Charge,0.12044293823787923
+pass__Streaming Music,0.11865867681205629
+num__Number of Dependents,0.1070245124530852
+num__Total Charges,0.10258785150969253
+num__ARPU,0.09846144217023496
+num__Avg Monthly GB Download,0.09757713065533781
+pass__Premium Tech Support,0.09005462956602019
+num__Population,0.08687685303202508
+num__Age,0.08680688046460214
+pass__Referred a Friend,0.08557200607370646
+pass__Paperless Billing,0.08029096379550615
+pass__Online Backup,0.07520221396983849
+num__Avg Monthly Long Distance Charges,0.07457345800823674
+num__Autopay_Indicator,0.06985658868203803
+cat__Internet Type_fiber optic,0.05860479000291395
+num__Service_Density,0.05175295522819257
+pass__Multiple Lines,0.050467039293377806
+pass__Streaming TV,0.0447928776067628
+cat__Offer_None,0.04472399221446841
+cat__Payment Method_bank withdrawal,0.0430801563876909
+pass__Streaming Movies,0.03743692334512835
+pass__Gender,0.03657700298163936
+pass__Device Protection Plan,0.035149007891617394
+cat__Contract_one year,0.03102111812657421
+num__Total Extra Data Charges,0.03051882152523602
+cat__Partner_1,0.024891504983684483
+cat__Offer_offer b,0.023135787850140848
+cat__Offer_offer e,0.01636188550609049
+cat__Internet Type_dsl,0.016025677313881853
+cat__Offer_offer a,0.014330248512855708
+cat__Payment Method_credit card,0.010603261279848434
+pass__Unlimited Data,0.00981435744712044
+cat__Offer_offer d,0.009490984307376138
+num__Total Refunds,0.008680653031702706
+pass__Married,0.005990606450782304
+cat__Internet Type_cable,0.005495968841220762
+cat__Offer_offer c,0.005170659442039462
+cat__Payment Method_mailed check,0.004747646221671575
+pass__Phone Service,0.003299116767553568
+cat__Internet Type_No Internet,0.0015163727684714724
 pass__Internet Service,0.0
