@@ -1,6 +1,7 @@
 """
 =============================================================================
 Streamlit Dashboard — Churn Analytics & Single-Customer Risk Predictor
+v2 — 4-model comparison (LR, XGBoost, Random Forest, LightGBM)
 =============================================================================
 Two-view dashboard:
   View 1 (Macro):  Executive churn insights, KPI cards, interactive charts.
