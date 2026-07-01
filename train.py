@@ -52,6 +52,18 @@ try:
 except ImportError:
     HAS_XGB = False
 
+try:
+    from lightgbm import LGBMClassifier
+    HAS_LGBM = True
+except ImportError:
+    HAS_LGBM = False
+
+try:
+    from imblearn.over_sampling import SMOTE
+    HAS_SMOTE = True
+except ImportError:
+    HAS_SMOTE = False
+
 from data_pipeline import load_config, run_pipeline
 from feature_engineering import engineer_features
 from explainability import compute_global_shap, save_shap_artifacts
@@ -125,6 +137,25 @@ def build_model_grid(
             RandomForestClassifier(random_state=cfg["training"]["random_state"]),
             grid,
         ))
+
+    # LightGBM
+    lgbm_cfg = models_cfg.get("lightgbm", {})
+    if lgbm_cfg.get("enabled", False) and HAS_LGBM:
+        grid = lgbm_cfg.get("param_grid", {}).copy()
+        if "scale_pos_weight" in grid:
+            grid["scale_pos_weight"] = [
+                class_ratio if v == "auto" else v for v in grid["scale_pos_weight"]
+            ]
+        model_list.append((
+            "LightGBM",
+            LGBMClassifier(
+                random_state=cfg["training"]["random_state"],
+                verbosity=-1,
+            ),
+            grid,
+        ))
+    elif lgbm_cfg.get("enabled", False) and not HAS_LGBM:
+        logger.warning("LightGBM not installed — skipping.")
 
     return model_list
 
@@ -280,6 +311,24 @@ def train_and_select(
 
     cv = StratifiedKFold(n_splits=n_folds, shuffle=True, random_state=random_state)
     model_list = build_model_grid(cfg, class_ratio)
+
+    # ── SMOTE oversampling (applied once, before all model training) ──
+    smote_cfg = train_cfg.get("smote", {})
+    if smote_cfg.get("enabled", False) and HAS_SMOTE:
+        smote = SMOTE(
+            sampling_strategy=smote_cfg.get("sampling_strategy", "auto"),
+            k_neighbors=smote_cfg.get("k_neighbors", 5),
+            random_state=random_state,
+        )
+        n_before = len(X_train)
+        X_train, y_train = smote.fit_resample(X_train, y_train)
+        logger.info(
+            "SMOTE: %d → %d samples (minority oversampled to %.0f%%)",
+            n_before, len(X_train),
+            (y_train == 1).sum() / len(y_train) * 100,
+        )
+    elif smote_cfg.get("enabled", False) and not HAS_SMOTE:
+        logger.warning("imbalanced-learn not installed — skipping SMOTE.")
 
     all_results: List[Dict[str, Any]] = []
     best_score = -1.0
