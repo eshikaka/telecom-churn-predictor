@@ -279,6 +279,22 @@ training:
         min_samples_leaf: [1, 2, 4]
         class_weight: ["balanced"]
 
+    lightgbm:
+      enabled: true
+      param_grid:
+        n_estimators: [100, 200, 300]
+        max_depth: [3, 5, 7]
+        learning_rate: [0.01, 0.05, 0.1]
+        num_leaves: [31, 63]
+        subsample: [0.8, 1.0]
+        colsample_bytree: [0.8, 1.0]
+        scale_pos_weight: ["auto"]
+
+  smote:
+    enabled: true
+    sampling_strategy: "auto"
+    k_neighbors: 5
+
   scoring_metric: "roc_auc"
 
 # ---------------------------------------------------------------------------
