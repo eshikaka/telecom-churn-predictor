@@ -392,7 +392,8 @@ def render_dynamic_form(cfg: Dict[str, Any]) -> tuple:
                     name    = field["name"]
                     label   = field.get("label", name)   # display label (optional override)
                     ftype   = field.get("type", "number")
-                    key_id  = f"field__{name.replace(' ', '_')}"
+                    _rc     = st.session_state.get("_reset_count", 0)
+                    key_id  = f"field__{name.replace(' ', '_')}__{_rc}"
 
                     # ── select ─────────────────────────────────────────────
                     if ftype == "select":
@@ -517,7 +518,7 @@ def render_micro_view(cfg: Dict[str, Any]):
     st.subheader("Customer Profile Input")
 
     if st.button("Reset to Defaults"):
-        st.session_state.clear()
+        st.session_state["_reset_count"] = st.session_state.get("_reset_count", 0) + 1
         st.rerun()
 
     customer_raw, submitted = render_dynamic_form(cfg)
